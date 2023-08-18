@@ -12,6 +12,11 @@ enum Method {
     Search,
 }
 
+enum Confirm {
+    Yes,
+    No,
+}
+
 impl fmt::Display for Source {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
@@ -31,9 +36,17 @@ impl fmt::Display for Method {
     }
 }
 
+impl fmt::Display for Confirm {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            Confirm::Yes => write!(f, "Yes"),
+            Confirm::No => write!(f, "No"),
+        }
+    }
+}
+
 struct Response {
     val: String,
-    temp: i32,
     source: String,
 }
 
@@ -84,7 +97,7 @@ fn main() {
             println!("⚠️ DEBUG INFO: 🔎 You want to search by: {}", &source);
         }
         Err(_) => {
-            println!("🚨 There was an error ");
+            println!("🚨 There was a fatal error ");
             exit(1);
         }
     }
@@ -105,12 +118,42 @@ fn main() {
         }
         Method::Output => {
             let message = "temp result";
+            question = String::from("temp");
             explain(message, source);
         }
     }
+
+    search_gpt(question);
 }
 
 fn search(question: &str, source: Source) {}
 fn explain(question: &str, source: Source) {}
-
-fn searchGoogle(term: &str) {}
+fn ask_question_gpt(q: &String) -> String {
+    return format!("This is my answer to {}", q);
+}
+fn search_google(term: &str) {}
+fn search_internal(term: &str) {}
+fn search_gpt(term: String) {
+    let mut question = &term;
+    // TODO send the question
+    let mut reply = ask_question_gpt(question);
+    let mut ans = GPTResult {
+        question: term,
+        answer: Response {
+            val: reply,
+            source: Source::GPT.to_string(),
+        },
+    };
+    loop {
+        println!("{} Says:\n\t{}", ans.answer.source, ans.answer.val);
+        let _ask = Text::new(">").prompt();
+        match _ask {
+            Ok(_a) => reply = ask_question_gpt(&_a),
+            Err(_) => {
+                println!("Exiting...");
+                exit(0);
+            }
+        }
+        ans.answer.val = reply;
+    }
+}
