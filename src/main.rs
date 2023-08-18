@@ -11,7 +11,6 @@ enum Method {
     Output,
     Search,
 }
-
 enum Confirm {
     Yes,
     No,
@@ -146,7 +145,7 @@ fn search_gpt(term: String) {
     };
     loop {
         println!("{} Says:\n\t{}", ans.answer.source, ans.answer.val);
-        let _ask = Text::new(">").prompt();
+        let _ask = Text::new("").prompt();
         match _ask {
             Ok(_a) => reply = ask_question_gpt(&_a),
             Err(_) => {
