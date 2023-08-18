@@ -116,7 +116,7 @@ fn main() {
                     exit(1);
                 }
             }
-            search(&question, source);
+            search(question, source);
         }
         Method::Output => {
             let message = "temp result";
@@ -124,17 +124,25 @@ fn main() {
             explain(message, source);
         }
     }
-
-    search_gpt(question);
 }
 
-fn search(question: &str, source: Source) {}
+fn search(question: String, source: Source) {
+    match source {
+        Source::GPT => search_gpt(question),
+        Source::Google => search_google(question),
+        Source::Internal => search_internal(question),
+    }
+}
 fn explain(question: &str, source: Source) {}
 fn ask_question_gpt(q: &String) -> String {
     return format!("This is my answer to {}", q);
 }
-fn search_google(term: &str) {}
-fn search_internal(term: &str) {}
+fn search_google(term: String) {
+    println!("google search not implemented. term={}", term);
+}
+fn search_internal(term: String) {
+    println!("internal search not implemented. term={}", term);
+}
 fn search_gpt(term: String) {
     let mut question = &term;
     // TODO send the question
