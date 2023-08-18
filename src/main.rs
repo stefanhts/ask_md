@@ -2,6 +2,8 @@ use inquire::{error::InquireError, Select, Text};
 use std::io;
 use std::{fmt, process::exit};
 
+mod cmd;
+
 enum Source {
     GPT,
     Google,
